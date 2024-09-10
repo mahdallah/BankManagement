@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35219.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankManagement.MobileApp", "BankManagement.MobileApp\BankManagement.MobileApp.csproj", "{D4555106-37FA-4801-B7FC-C5AFCE8D4121}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4555106-37FA-4801-B7FC-C5AFCE8D4121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4555106-37FA-4801-B7FC-C5AFCE8D4121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4555106-37FA-4801-B7FC-C5AFCE8D4121}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D4555106-37FA-4801-B7FC-C5AFCE8D4121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4555106-37FA-4801-B7FC-C5AFCE8D4121}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4555106-37FA-4801-B7FC-C5AFCE8D4121}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {65435B2A-36D0-41BB-AEDE-8D64FE5A98E5}
+	EndGlobalSection
+EndGlobal
