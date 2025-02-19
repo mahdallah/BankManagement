@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BankManagement.MobileApp.SettingsPage"
+             Title="SettingsPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Search Bar -->
+        <SearchBar x:Name="SearchBar"
+                   Placeholder="Search Senders"
+                   TextChanged="OnSearchBarTextChanged" />
+
+        <!-- CollectionView -->
+        <CollectionView x:Name="SmsSendersCollectionView"
+                        Grid.Row="1"
+                        ItemsSource="{Binding FilteredSmsSenders}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal" Padding="10">
+                        <CheckBox IsChecked="{Binding IsSelected}" />
+                        <Label Text="{Binding Sender}" 
+                               VerticalOptions="Center" 
+                               FontSize="16" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Floating Save Button -->
+        <Button Text="Save"
+                Command="{Binding SaveCommand}"
+                WidthRequest="100"
+                HeightRequest="40"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="20"
+                BackgroundColor="Blue"
+                TextColor="White" />
+    </Grid>
+</ContentPage>
