@@ -103,59 +103,55 @@ public partial class SettingsPage : ContentPage
         await Task.Run(() =>
         {
 #if ANDROID
-        string INBOX = "content://sms/inbox";
-        var uri = Android.Net.Uri.Parse(INBOX)
-            ?? throw new Exception("Uri is null");
-        var projection = new[] { "DISTINCT address", "body", "date", "type" };
-        var cursor = Android.App.Application.Context.ContentResolver.Query(uri, projection, null, null, null);
+            string INBOX = "content://sms/inbox";
+            var uri = Android.Net.Uri.Parse(INBOX)
+                ?? throw new Exception("Uri is null");
+            var projection = new[] { "DISTINCT address", "body", "date", "type" };
+            var cursor = Android.App.Application.Context.ContentResolver.Query(uri, projection, null, null, null);
 
-        if (cursor != null)
-        {
-            var messages = new List<SmsMessage>();
-            try
+            if (cursor != null)
             {
-                while (cursor.MoveToNext())
+                var messages = new List<SmsSenderViewDto>();
+                try
                 {
-                    var address = cursor.GetString(cursor.GetColumnIndex("address"));
-                    var body = cursor.GetString(cursor.GetColumnIndex("body"));
-                    var date = cursor.GetLong(cursor.GetColumnIndex("date"));
-                    var type = cursor.GetInt(cursor.GetColumnIndex("type"));
-
-                    messages.Add(new SmsMessage
+                    while (cursor.MoveToNext())
                     {
-                        Address = address,
-                        Body = body,
-                        Date = DateTimeOffset.FromUnixTimeMilliseconds(date).DateTime,
-                        Type = type == 1 ? "Received" : "Sent"
+                        var address = cursor.GetString(cursor.GetColumnIndex("address"));
+                        int senderIndex = cursor.GetColumnIndex("address");
+
+
+                        messages.Add(new SmsSenderViewDto
+                        {
+                            Address = address,
+                        });
+                    }
+
+                    // Retrieve saved senders from Preferences
+                    var savedSendersJson = Preferences.Get("SelectedSmsSenders", string.Empty);
+                    var savedSenders = string.IsNullOrEmpty(savedSendersJson)
+                        ? new List<SmsSender>()
+                        : JsonConvert.DeserializeObject<List<SmsSender>>(savedSendersJson);
+
+                    // Populate SmsSenders with unique addresses and check if they are saved
+                    var uniqueSenders = messages.Select(m => m.Address).Distinct().ToList();
+
+                    // Update the UI on the main thread
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        SmsSenders.Clear();
+                        foreach (var sender in uniqueSenders)
+                        {
+                            // Mark sender as selected if it exists in saved senders
+                            var isSelected = savedSenders.Any(s => s.Sender == sender);
+                            SmsSenders.Add(new SmsSender { Sender = sender, IsSelected = isSelected });
+                        }
                     });
                 }
-
-                // Retrieve saved senders from Preferences
-                var savedSendersJson = Preferences.Get("SelectedSmsSenders", string.Empty);
-                var savedSenders = string.IsNullOrEmpty(savedSendersJson)
-                    ? new List<SmsSender>()
-                    : JsonConvert.DeserializeObject<List<SmsSender>>(savedSendersJson);
-
-                // Populate SmsSenders with unique addresses and check if they are saved
-                var uniqueSenders = messages.Select(m => m.Address).Distinct().ToList();
-
-                // Update the UI on the main thread
-                Device.BeginInvokeOnMainThread(() =>
+                finally
                 {
-                    SmsSenders.Clear();
-                    foreach (var sender in uniqueSenders)
-                    {
-                        // Mark sender as selected if it exists in saved senders
-                        var isSelected = savedSenders.Any(s => s.Sender == sender);
-                        SmsSenders.Add(new SmsSender { Sender = sender, IsSelected = isSelected });
-                    }
-                });
+                    cursor?.Close();
+                }
             }
-            finally
-            {
-                cursor?.Close();
-            }
-        }
 #endif
         });
     }
